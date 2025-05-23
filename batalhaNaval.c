@@ -1,10 +1,57 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+
 
 // Desafio Batalha Naval - MateCheck
 
 #define TAMANHO_TABULEIRO 10
 #define TOTAL_NAVIOS 4
+
+
+void desenhaCone(int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO],
+                 int linha, int coluna, int tamanho, int id) {
+    for (int i = 0; i < tamanho; i++) {
+        int atual_linha = linha + i;
+        int inicio_coluna = coluna - i;
+        int fim_coluna = coluna + i;
+
+        for (int j = inicio_coluna; j <= fim_coluna; j++) {
+            if (atual_linha >= 0 && atual_linha < TAMANHO_TABULEIRO &&
+                j >= 0 && j < TAMANHO_TABULEIRO) {
+                tabuleiro[atual_linha][j] = id;
+            }
+        }
+    }
+}
+
+void desenhaCruz(int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO],
+                 int linha, int coluna, int tamanho, int id) {
+    int offset = tamanho / 2;
+    for (int i = -offset; i <= offset; i++) {
+        if (linha + i >= 0 && linha + i < TAMANHO_TABULEIRO)
+            tabuleiro[linha + i][coluna] = id;
+        if (coluna + i >= 0 && coluna + i < TAMANHO_TABULEIRO)
+            tabuleiro[linha][coluna + i] = id;
+    }
+}
+
+void desenhaOctaedro(int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO],
+                     int linha, int coluna, int tamanho, int id) {
+    int offset = tamanho / 2;
+    for (int i = -offset; i <= offset; i++) {
+        for (int j = -offset; j <= offset; j++) {
+            if (abs(i) + abs(j) <= offset) {
+                int l = linha + i;
+                int c = coluna + j;
+                if (l >= 0 && l < TAMANHO_TABULEIRO && c >= 0 && c < TAMANHO_TABULEIRO) {
+                    tabuleiro[l][c] = id;
+                }
+            }
+        }
+    }
+}
+
 
 bool posicao_valida(int linha, int coluna) {
     return linha >= 0 && linha < TAMANHO_TABULEIRO &&
@@ -86,6 +133,12 @@ int main() {
         }
     }
 
+    // Com inicio em 0 e centro em 0
+    desenhaCone(tabuleiro, 0, 0, 3, 1);
+    // Com inicio em 5 e centro em 5
+    desenhaCruz(tabuleiro, 5, 5, 5, 1);  
+    // Com inicio em 7 e centro em 2    
+    desenhaOctaedro(tabuleiro, 7, 2, 5, 1);
      
     printf("\nTabuleiro:\n");
     imprimir_tabuleiro(tabuleiro);
