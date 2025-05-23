@@ -4,7 +4,7 @@
 // Desafio Batalha Naval - MateCheck
 
 #define TAMANHO_TABULEIRO 10
-#define TOTAL_NAVIOS 2
+#define TOTAL_NAVIOS 4
 
 bool posicao_valida(int linha, int coluna) {
     return linha >= 0 && linha < TAMANHO_TABULEIRO &&
@@ -16,9 +16,14 @@ bool posicionar_navio(int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO],
                       int tamanho, char direcao, int id_navio) {
     int d_linha = 0, d_coluna = 0;
 
-    if (direcao == 'H') d_coluna = 1;     // Horizontal
-    else if (direcao == 'V') d_linha = 1; // Vertical
-    else return false;
+    
+    switch (direcao) {
+        case 'H': d_coluna = 1; break;         // Horizontal
+        case 'V': d_linha = 1; break;          // Vertical
+        case 'D': d_linha = 1; d_coluna = 1; break; // Diagonal ↘
+        case 'E': d_linha = 1; d_coluna = -1; break; // Diagonal ↙
+        default: return false;
+    }
 
     // Verifica se cabe no tabuleiro
     for (int i = 0; i < tamanho; i++) {
@@ -65,19 +70,19 @@ void imprimir_tabuleiro(int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO]) {
 int main() {
     int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO] = {0};
     
-    int linhas[TOTAL_NAVIOS]        =  { 0, 0 };
-    char colunas[TOTAL_NAVIOS]      =  { 'A', 'H' };
-    int tamanhos[TOTAL_NAVIOS]      =  { 3, 3 };
-    char direcoes[TOTAL_NAVIOS]     =  { 'H', 'V' };
-    int ids[TOTAL_NAVIOS]      =  { 1, 2 };
+    int linhas[TOTAL_NAVIOS]        =  { 0, 0, 5, 2 };
+    char colunas[TOTAL_NAVIOS]      =  { 'A', 'H', 'F', 'C' };
+    int tamanhos[TOTAL_NAVIOS]      =  { 3, 3, 3, 3 };
+    char direcoes[TOTAL_NAVIOS]     =  { 'H', 'V', 'D', 'E' };
+    int ids[TOTAL_NAVIOS]      =  { 1, 2, 3, 4 };
 
     // Posiciona os navios
     for (int i = 0; i < TOTAL_NAVIOS; i++) {
         int linha = linhas[i];
         int coluna = colunas[i] - 'A';
 
-        if (!posicionar_navio(tabuleiro, linha, coluna, tamanhos[i], direcoes[i], ids[1])) {
-            printf("Falha ao posicionar navio %d.\n", ids[1]);
+        if (!posicionar_navio(tabuleiro, linha, coluna, tamanhos[i], direcoes[i], ids[i + 1])) {
+            printf("Falha ao posicionar navio %d.\n", ids[i +1]);
         }
     }
 
